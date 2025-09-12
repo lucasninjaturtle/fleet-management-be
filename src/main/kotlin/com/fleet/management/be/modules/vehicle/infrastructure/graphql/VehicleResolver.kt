@@ -1,4 +1,4 @@
-package com.fleet.management.be.modules.vehicle.graphql
+package com.fleet.management.be.modules.vehicle.infrastructure.graphql
 
 import com.fleet.management.be.modules.vehicle.application.ListVehicles
 import com.fleet.management.be.modules.vehicle.domain.Vehicle

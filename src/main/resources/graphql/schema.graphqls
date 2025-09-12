@@ -1,31 +1,42 @@
+# ========== VEHICLE ==========
 type Vehicle {
-  id: ID!
-  plateNumber: String!
-  model: String!
-  year: Int!
-  status: VehicleStatus!
+    id: ID!
+    plateNumber: String!
+    model: String!
+    year: Int!
+    status: VehicleStatus!
 }
 
 enum VehicleStatus { ACTIVE INACTIVE }
 
+input CreateVehicleInput {
+    plateNumber: String!
+    model: String!
+    year: Int!
+    status: VehicleStatus = ACTIVE
+}
+
+# ========== AUTH ==========
 type User {
-  id: ID!
-  username: String!
-  role: Role!
+    id: ID!
+    username: String!
+    role: Role!
 }
 
 enum Role { USER ADMIN }
 
 type AuthPayload {
-  token: String!
-  user: User!
+    token: String!
+    user: User!
 }
 
+
 type Query {
-  vehicles: [Vehicle!]!
+    vehicles: [Vehicle!]!
 }
 
 type Mutation {
-  register(username: String!, password: String!, role: Role = USER): AuthPayload!
-  login(username: String!, password: String!): AuthPayload!
+    register(username: String!, password: String!, role: Role = USER): AuthPayload!
+    login(username: String!, password: String!): AuthPayload!
+    createVehicle(input: CreateVehicleInput!): Vehicle!
 }
