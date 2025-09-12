@@ -9,11 +9,33 @@ type Vehicle {
 
 enum VehicleStatus { ACTIVE INACTIVE }
 
-input CreateVehicleInput {
-    plateNumber: String!
-    model: String!
-    year: Int!
-    status: VehicleStatus = ACTIVE
+# paging & filtering
+input PageInput {
+    limit: Int = 20
+    offset: Int = 0
+}
+
+enum SortDirection { ASC, DESC }
+enum VehicleSortField { MODEL, YEAR, PLATE_NUMBER }
+
+input VehicleSortInput {
+    field: VehicleSortField = MODEL
+    direction: SortDirection = ASC
+}
+
+input VehicleFilter {
+    status: VehicleStatus
+    modelContains: String
+    plateContains: String
+    yearFrom: Int
+    yearTo: Int
+}
+
+type VehiclePage {
+    items: [Vehicle!]!
+    total: Int!
+    limit: Int!
+    offset: Int!
 }
 
 # ========== AUTH ==========
@@ -30,13 +52,26 @@ type AuthPayload {
     user: User!
 }
 
+# ========== INPUTS ==========
+input CreateVehicleInput {
+    plateNumber: String!
+    model: String!
+    year: Int!
+    status: VehicleStatus = ACTIVE
+}
 
+# ========== ROOT TYPES ==========
 type Query {
     vehicles: [Vehicle!]!
+    vehicle(id: ID!): Vehicle!
+    vehiclesPage(filter: VehicleFilter, page: PageInput, sort: VehicleSortInput): VehiclePage!
 }
 
 type Mutation {
     register(username: String!, password: String!, role: Role = USER): AuthPayload!
     login(username: String!, password: String!): AuthPayload!
+
     createVehicle(input: CreateVehicleInput!): Vehicle!
+    updateVehicleStatus(id: ID!, status: VehicleStatus!): Vehicle!
+    deleteVehicle(id: ID!): Boolean!
 }

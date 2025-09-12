@@ -13,4 +13,6 @@ class VehicleCommandAdapter(
     override fun save(vehicle: Vehicle): Vehicle = repo.save(vehicle)
     override fun existsByPlateNumber(plate: String): Boolean = repo.existsByPlateNumber(plate)
     override fun findByPlateNumber(plate: String): Optional<Vehicle> = repo.findByPlateNumber(plate)
+    override fun findById(id: Long): Optional<Vehicle> = repo.findById(id)
+    override fun deleteById(id: Long) = repo.deleteById(id)
 }
