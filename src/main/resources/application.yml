@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: fleet-management-be
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${POSTGRES_URL:jdbc:postgresql://localhost:5432/fleetdb}}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  graphql:
+    graphiql:
+      enabled: true
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET:changeit-please}
+    expSeconds: 3600
