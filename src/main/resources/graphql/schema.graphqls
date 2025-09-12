@@ -75,3 +75,20 @@ type Mutation {
     updateVehicleStatus(id: ID!, status: VehicleStatus!): Vehicle!
     deleteVehicle(id: ID!): Boolean!
 }
+
+# ---- ME view ----
+type Me {
+    user: User!
+    vehiclesAssigned: [Vehicle!]!
+    vehiclesActiveCount: Int!
+    vehiclesInactiveCount: Int!
+}
+
+extend type Query {
+    me: Me!
+}
+
+# ---- Assign vehicle (admin) ----
+extend type Mutation {
+    assignVehicleToUser(vehicleId: ID!, userId: ID!): Vehicle!
+}

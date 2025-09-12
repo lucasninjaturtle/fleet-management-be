@@ -1,7 +1,6 @@
 package com.fleet.management.be.modules.vehicle.infrastructure.graphql
 
-import com.fleet.management.be.modules.vehicle.application.CreateVehicle
-import com.fleet.management.be.modules.vehicle.application.CreateVehicleCommand
+import com.fleet.management.be.modules.vehicle.application.*
 import com.fleet.management.be.modules.vehicle.domain.Vehicle
 import com.fleet.management.be.modules.vehicle.domain.VehicleStatus
 import org.springframework.graphql.data.method.annotation.Argument
@@ -18,7 +17,10 @@ data class CreateVehicleInput(
 
 @Controller
 class VehicleMutationResolver(
-    private val createVehicle: CreateVehicle
+    private val createVehicle: CreateVehicle,
+    private val updateVehicleStatus: UpdateVehicleStatus,
+    private val deleteVehicle: DeleteVehicle,
+    private val assignVehicleToUser: AssignVehicleToUser
 ) {
     @PreAuthorize("hasRole('ADMIN')")
     @MutationMapping
@@ -31,4 +33,18 @@ class VehicleMutationResolver(
                 status = input.status
             )
         )
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @MutationMapping
+    fun updateVehicleStatus(@Argument id: Long, @Argument status: VehicleStatus): Vehicle =
+        updateVehicleStatus.handle(id, status)
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @MutationMapping
+    fun deleteVehicle(@Argument id: Long): Boolean = deleteVehicle.handle(id)
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @MutationMapping
+    fun assignVehicleToUser(@Argument vehicleId: Long, @Argument userId: Long): Vehicle =
+        assignVehicleToUser.handle(vehicleId, userId)
 }

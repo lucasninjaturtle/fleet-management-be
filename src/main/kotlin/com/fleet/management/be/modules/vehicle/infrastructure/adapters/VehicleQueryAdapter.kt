@@ -8,6 +8,7 @@ import com.fleet.management.be.modules.vehicle.application.dto.VehicleSort
 import com.fleet.management.be.modules.vehicle.application.dto.VehicleSortField
 import com.fleet.management.be.modules.vehicle.application.ports.VehicleQueryPort
 import com.fleet.management.be.modules.vehicle.domain.Vehicle
+import com.fleet.management.be.modules.vehicle.domain.VehicleStatus
 import com.fleet.management.be.modules.vehicle.infrastructure.jpa.JpaVehicleRepository
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Component
@@ -21,6 +22,13 @@ class VehicleQueryAdapter(
 
     override fun findAll(): List<Vehicle> = repo.findAll()
     override fun findById(id: Long): Optional<Vehicle> = repo.findById(id)
+
+    override fun findByAssignedUser(userId: Long): List<Vehicle> =
+        repo.findAllByAssignedUserId(userId)
+
+    override fun countByAssignedUserAndStatus(userId: Long, status: VehicleStatus): Long =
+        repo.countByAssignedUserIdAndStatus(userId, status)
+
     override fun findPage(filter: VehicleFilter, page: PageRequest, sort: VehicleSort): Page<Vehicle> {
         val where = StringBuilder(" FROM Vehicle v WHERE 1=1 ")
         val params = mutableMapOf<String, Any>()
