@@ -184,8 +184,3 @@ We follow an **incremental / stacked branching** approach:
 4. Keep PRs incremental (prefer multiple small PRs over a single large one).
 
 ---
-
-## 📄 License
-
-If this project will be open-sourced, add a license file (e.g., `MIT`, `Apache-2.0`) and reference it here.  
-_For now, this section is a placeholder until a license is selected._
