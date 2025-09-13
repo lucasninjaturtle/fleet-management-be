@@ -27,6 +27,7 @@ Provide GraphQL queries/mutations and secure persistence to manage:
 - **Testing:** JUnit 5 + Testcontainers
 - **Local Infra:** Docker Compose
 - **CI/CD:** (GitHub Actions / GitLab CI)
+- **AWS-Infra:** : see the [Infrastructure Guide](deployment/ecs/README.md)
 
 ---
 
@@ -166,10 +167,7 @@ mutation {
 
 ---
 
-## 🌱 Roadmap / Next Steps
-
-- ✳️ Unit & integration tests with **Testcontainers**
-- ✳️ CI/CD pipeline (example with GitHub Actions)
+👉 Infra & AWS (ECS/ECR/RDS): see the [Infrastructure Guide](deployment/ecs/README.md).
 
 ---
 
