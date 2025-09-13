@@ -26,7 +26,7 @@ Provide GraphQL queries/mutations and secure persistence to manage:
 - **Security:** Spring Security + JWT (initial setup in place)
 - **Testing:** JUnit 5 + Testcontainers
 - **Local Infra:** Docker Compose
-- **CI/CD:** _planned_ (GitHub Actions / GitLab CI)
+- **CI/CD:** (GitHub Actions / GitLab CI)
 
 ---
 
@@ -127,13 +127,19 @@ src
 
 ## ✅ Features Implemented So Far
 
-- ✅ Project bootstrap with **Kotlin + Spring Boot**
-- ✅ **Vehicle** entity and **GraphQL query `vehicles`**
-- ✅ **PostgreSQL** connectivity via **Docker Compose**
-- ✅ **pgAdmin** integration for DB management
-- ✅ Initial **JWT** scaffolding and auth module structure
-- ✅ Tests with **JUnit** (Testcontainers-ready project)
-
+- ✅ **Vehicle** entity + GraphQL query `vehicles`
+- ✅ **Driver** entity + status enum + relation to vehicle & fleet
+- ✅ **Fleet** entity + relation to vehicles
+- ✅ **Contract** entity (leasing) + relation to vehicle, driver, fleet
+- ✅ **MaintenanceRecord** entity + relation to vehicle
+- ✅ **GraphQL schema types** for all modules
+- ✅ **Seed & Reset mutations**:
+    - `seed(kind: "full")` → load demo data (4 records each table)
+    - `resetDb` → clear all data
+- ✅ PostgreSQL connectivity via Docker Compose
+- ✅ pgAdmin integration for DB management
+- ✅ Initial JWT scaffolding
+- ✅ Tests with JUnit 5
 **Example query**
 
 ```graphql
@@ -146,20 +152,24 @@ query {
   }
 }
 ```
+**Example mutation (seed/reset)**
+
+```graphql
+mutation {
+  seed(kind: "full")
+}
+
+mutation {
+  resetDb
+}
+```
 
 ---
 
 ## 🌱 Roadmap / Next Steps
 
-- ✳️ GraphQL **mutations** for creating vehicles
-- ✳️ **Driver** entity + association with `Vehicle`
-- ✳️ **Fleet** entity to group vehicles and drivers
-- ✳️ **Contract** (leasing) entity + mutations
-- ✳️ **MaintenanceRecord** entity for maintenance logs
-- ✳️ Full **JWT** flow (login, register, refresh token)
-- ✳️ GraphQL documentation and schema enhancements
 - ✳️ Unit & integration tests with **Testcontainers**
-- ✳️ **CI/CD** pipeline (example with GitHub Actions)
+- ✳️ CI/CD pipeline (example with GitHub Actions)
 
 ---
 
@@ -168,9 +178,10 @@ query {
 We follow an **incremental / stacked branching** approach:
 
 - `01-init` – initial project setup
-- `02-auth` – JWT security configuration and basic auth scaffolding
+- `02-auth` – JWT scaffolding
 - `03-vehicle` – Vehicle entity + base query
-- (and upcoming branches for Driver, Fleet, Contracts, Maintenance, …)
+- `04-tests` – GraphQL resolver tests
+- `05-leasing-schemas` – Fleet/Driver/Contract/Maintenance schemas + Seed/Reset
 
 > Keep PRs **small and focused** to ease code review and speed up delivery.
 
