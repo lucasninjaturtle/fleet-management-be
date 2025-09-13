@@ -2,6 +2,7 @@ package com.fleet.management.be.modules.vehicle.domain
 
 import jakarta.persistence.*
 import com.fleet.management.be.modules.vehicle.domain.VehicleStatus
+import com.fleet.management.be.modules.fleet.domain.Fleet
 
 @Entity
 @Table(
@@ -26,5 +27,9 @@ data class Vehicle(
     val status: VehicleStatus = VehicleStatus.ACTIVE,
 
     @Column(name = "assigned_user_id")
-    val assignedUserId: Long? = null
+    val assignedUserId: Long? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fleet_id")
+    var fleet: Fleet? = null
 )

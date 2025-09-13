@@ -92,3 +92,64 @@ extend type Query {
 extend type Mutation {
     assignVehicleToUser(vehicleId: ID!, userId: ID!): Vehicle!
 }
+
+type Fleet {
+    id: ID!
+    name: String!
+    description: String
+    vehicles: [Vehicle!]!
+}
+
+type Driver {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String
+    phone: String
+    licenseNumber: String
+    licenseCategory: String
+    licenseExpiry: String
+    status: DriverStatus!
+    fleet: Fleet
+    vehicle: Vehicle
+}
+
+enum DriverStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}
+
+type Contract {
+    id: ID!
+    vehicle: Vehicle!
+    driver: Driver!
+    fleet: Fleet!
+    startDate: String!
+    endDate: String
+    monthlyRate: Float!
+    mileageLimitKm: Int
+    status: ContractStatus!
+}
+
+enum ContractStatus {
+    ACTIVE, TERMINATED, PENDING
+}
+
+enum MaintenanceType { SCHEDULED REPAIR INSPECTION }
+
+type MaintenanceRecord {
+    id: ID!
+    vehicle: Vehicle!
+    serviceDate: String!
+    odometerKm: Int
+    type: MaintenanceType!
+    description: String
+    cost: Float
+}
+
+extend type Mutation {
+    seed(kind: String): Boolean!
+    resetDb: Boolean!
+}
+
