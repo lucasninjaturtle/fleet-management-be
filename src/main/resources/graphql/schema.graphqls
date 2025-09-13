@@ -1,31 +1,155 @@
+# ========== VEHICLE ==========
 type Vehicle {
-  id: ID!
-  plateNumber: String!
-  model: String!
-  year: Int!
-  status: VehicleStatus!
+    id: ID!
+    plateNumber: String!
+    model: String!
+    year: Int!
+    status: VehicleStatus!
 }
 
 enum VehicleStatus { ACTIVE INACTIVE }
 
+# paging & filtering
+input PageInput {
+    limit: Int = 20
+    offset: Int = 0
+}
+
+enum SortDirection { ASC, DESC }
+enum VehicleSortField { MODEL, YEAR, PLATE_NUMBER }
+
+input VehicleSortInput {
+    field: VehicleSortField = MODEL
+    direction: SortDirection = ASC
+}
+
+input VehicleFilter {
+    status: VehicleStatus
+    modelContains: String
+    plateContains: String
+    yearFrom: Int
+    yearTo: Int
+}
+
+type VehiclePage {
+    items: [Vehicle!]!
+    total: Int!
+    limit: Int!
+    offset: Int!
+}
+
+# ========== AUTH ==========
 type User {
-  id: ID!
-  username: String!
-  role: Role!
+    id: ID!
+    username: String!
+    role: Role!
 }
 
 enum Role { USER ADMIN }
 
 type AuthPayload {
-  token: String!
-  user: User!
+    token: String!
+    user: User!
 }
 
+# ========== INPUTS ==========
+input CreateVehicleInput {
+    plateNumber: String!
+    model: String!
+    year: Int!
+    status: VehicleStatus = ACTIVE
+}
+
+# ========== ROOT TYPES ==========
 type Query {
-  vehicles: [Vehicle!]!
+    vehicles: [Vehicle!]!
+    vehicle(id: ID!): Vehicle!
+    vehiclesPage(filter: VehicleFilter, page: PageInput, sort: VehicleSortInput): VehiclePage!
 }
 
 type Mutation {
-  register(username: String!, password: String!, role: Role = USER): AuthPayload!
-  login(username: String!, password: String!): AuthPayload!
+    register(username: String!, password: String!, role: Role = USER): AuthPayload!
+    login(username: String!, password: String!): AuthPayload!
+
+    createVehicle(input: CreateVehicleInput!): Vehicle!
+    updateVehicleStatus(id: ID!, status: VehicleStatus!): Vehicle!
+    deleteVehicle(id: ID!): Boolean!
 }
+
+# ---- ME view ----
+type Me {
+    user: User!
+    vehiclesAssigned: [Vehicle!]!
+    vehiclesActiveCount: Int!
+    vehiclesInactiveCount: Int!
+}
+
+extend type Query {
+    me: Me!
+}
+
+# ---- Assign vehicle (admin) ----
+extend type Mutation {
+    assignVehicleToUser(vehicleId: ID!, userId: ID!): Vehicle!
+}
+
+type Fleet {
+    id: ID!
+    name: String!
+    description: String
+    vehicles: [Vehicle!]!
+}
+
+type Driver {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String
+    phone: String
+    licenseNumber: String
+    licenseCategory: String
+    licenseExpiry: String
+    status: DriverStatus!
+    fleet: Fleet
+    vehicle: Vehicle
+}
+
+enum DriverStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}
+
+type Contract {
+    id: ID!
+    vehicle: Vehicle!
+    driver: Driver!
+    fleet: Fleet!
+    startDate: String!
+    endDate: String
+    monthlyRate: Float!
+    mileageLimitKm: Int
+    status: ContractStatus!
+}
+
+enum ContractStatus {
+    ACTIVE, TERMINATED, PENDING
+}
+
+enum MaintenanceType { SCHEDULED REPAIR INSPECTION }
+
+type MaintenanceRecord {
+    id: ID!
+    vehicle: Vehicle!
+    serviceDate: String!
+    odometerKm: Int
+    type: MaintenanceType!
+    description: String
+    cost: Float
+}
+
+extend type Mutation {
+    seed(kind: String): Boolean!
+    resetDb: Boolean!
+}
+
