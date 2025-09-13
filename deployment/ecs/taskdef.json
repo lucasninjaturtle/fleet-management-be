@@ -1,0 +1,35 @@
+{
+  "family": "${ECS_TASK_FAMILY}",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsAppTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "REPLACED_BY_GITHUB_ACTION",
+      "portMappings": [
+        { "containerPort": 8080, "hostPort": 8080, "protocol": "tcp" }
+      ],
+      "essential": true,
+      "environment": [
+        { "name": "SPRING_DATASOURCE_URL", "value": "jdbc:postgresql://${RDS_ENDPOINT}:5432/${RDS_DB_NAME}" },
+        { "name": "SPRING_DATASOURCE_USERNAME", "value": "${RDS_USERNAME}" }
+      ],
+      "secrets": [
+        { "name": "SPRING_DATASOURCE_PASSWORD", "valueFrom": "arn:aws:ssm:${AWS_REGION}:<ACCOUNT_ID>:parameter/fleet/db/password" },
+        { "name": "APP_SECURITY_JWT_SECRET", "valueFrom": "arn:aws:ssm:${AWS_REGION}:<ACCOUNT_ID>:parameter/fleet/jwt/secret" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-group": "/ecs/fleet-backend",
+          "awslogs-stream-prefix": "app"
+        }
+      }
+    }
+  ]
+}
